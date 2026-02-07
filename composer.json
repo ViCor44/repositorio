@@ -1,0 +1,23 @@
+{
+    "name": "repositorio/parque-docs",
+    "description": "repositorio tecnico",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+        "Core\\": "Core/",
+        "App\\": "App/"
+        }
+    },
+    "authors": [
+        {
+            "name": "ViCor44",
+            "email": "victor.a.correia@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "spomky-labs/otphp": "^11.4",
+        "endroid/qr-code": "^6.0"
+    }
+
+}

@@ -1,0 +1,123 @@
+* {
+    box-sizing: border-box;
+    font-family: system-ui, sans-serif;
+}
+
+.auth-body {
+    margin:0;
+    height:100vh;
+    background:#f5f7fb;
+}
+
+.auth-container {
+    display:flex;
+    height:100vh;
+}
+
+/* LADO BRAND */
+
+.auth-brand {
+    flex:1;
+    background: linear-gradient(135deg,#6a11cb,#2575fc);
+    color:white;
+    padding:80px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+.brand-box h1 {
+    font-size:48px;
+    margin:0;
+}
+
+.brand-box p {
+    opacity:.9;
+}
+
+.brand-text h2 {
+    font-size:36px;
+}
+
+.brand-text p {
+    max-width:420px;
+    font-size:18px;
+}
+
+/* CARD */
+
+.auth-card {
+    width:420px;
+    background:white;
+    padding:60px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+/* FORM */
+
+.auth-card h2 {
+    margin-bottom:30px;
+}
+
+.auth-card label {
+    display:block;
+    margin-top:15px;
+    font-weight:600;
+}
+
+.auth-card input {
+    width:100%;
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+.auth-card button {
+    margin-top:25px;
+    padding:14px;
+    border:none;
+    background:#2563eb;
+    color:white;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.auth-card button:hover {
+    background:#1d4ed8;
+}
+
+.auth-links {
+    margin-top:20px;
+    text-align:center;
+}
+
+.auth-links a {
+    color:#2563eb;
+    text-decoration:none;
+    font-size:14px;
+}
+
+.auth-links a:hover {
+    text-decoration:underline;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+    .auth-container {
+        flex-direction:column;
+    }
+
+    .auth-brand {
+        display:none;
+    }
+
+    .auth-card {
+        width:100%;
+        height:100vh;
+    }
+}
