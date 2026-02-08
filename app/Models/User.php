@@ -66,16 +66,34 @@ class User extends Model {
         $stmt->execute([$id]);
     }
 
-    public function enable2fa(int $id, string $secret) {
+public function enable2fa(int $userId, string $secret): bool
+{
+    $secret = trim($secret);
 
+    // Regex ajustado: permite até 128 caracteres + padding
+    if (!preg_match('/^[A-Z2-7]{8,128}(={0,8})?$/', strtoupper($secret))) {
+        throw new \Exception("Secret 2FA inválido (não é Base32 válido). Valor recebido: " . substr($secret, 0, 50) . "... (len=" . strlen($secret) . ")");
+    }
+
+    // Grava exatamente como veio
+    $stmt = $this->db->prepare("
+        UPDATE users 
+        SET twofa_enabled = 1, twofa_secret = :secret 
+        WHERE id = :id
+    ");
+    $stmt->execute([':secret' => $secret, ':id' => $userId]);
+
+    return $stmt->rowCount() > 0;
+}
+    public function disable2fa(int $userId): bool
+    {
         $stmt = $this->db->prepare("
-            UPDATE users
-            SET twofa_enabled = 1,
-                twofa_secret = ?
-            WHERE id = ?
+            UPDATE users 
+            SET twofa_enabled = 0, twofa_secret = NULL 
+            WHERE id = :id
         ");
-
-        $stmt->execute([$secret, $id]);
+        $stmt->execute(['id' => $userId]);
+        return $stmt->rowCount() > 0;
     }
 
     public function countPending(): int {

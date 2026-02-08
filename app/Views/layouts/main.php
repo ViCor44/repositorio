@@ -19,7 +19,13 @@ if (!empty($_SESSION['user']) && $_SESSION['user']['role'] === 'Administrador') 
 <div class="layout">
 
     <aside class="sidebar">
-        <h2>Repositório</h2>
+        <div class="sidebar-brand">
+            <img 
+                src="<?= BASE_URL ?>/assets/img/securo-logo.png" 
+                alt="Securo"
+                class="sidebar-logo"
+            >
+        </div>
 
         <hr>
 

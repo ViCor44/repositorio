@@ -67,40 +67,37 @@ class AuthController extends Controller {
         $this->redirect('/login');
     }
 
-    public function verify2fa() {
-
+    public function verify2fa()
+    {
         if (!isset($_SESSION['2fa_pending'])) {
             $this->redirect('/login');
         }
 
-        $id = $_SESSION['2fa_pending'];
+        $userId = $_SESSION['2fa_pending'];
+        $userModel = new User();
+        $user = $userModel->findById($userId);
 
-        $userModel = new \App\Models\User();
-        $user = $userModel->findById($id);
+        $code = trim($_POST['code'] ?? '');
 
-        if (\Core\TwoFactor::verify(
-            $user['twofa_secret'],
-            $_POST['code']
-        )) {
-
+        if (\Core\TwoFactor::verify($user['twofa_secret'], $code)) {
             unset($_SESSION['2fa_pending']);
 
             $_SESSION['user'] = [
-                'id'=>$user['id'],
-                'nome'=>$user['nome'],
-                'role'=>$user['role_nome'],
-                'twofa_enabled' => (int)$user['twofa_enabled']
+                'id' => $user['id'],
+                'nome' => $user['nome'],
+                'role' => $user['role_nome'],
+                'twofa_enabled' => 1
             ];
 
             $this->redirect('/documentos');
         }
 
-        return $this->view('auth/2fa',[
-            'error'=>'Código inválido',
-            'title'=>'Verificação 2FA'
-        ],'layouts/auth');
+        return $this->view('auth/2fa', [
+            'error' => 'Código inválido. Verifica a hora do telemóvel e tenta novamente.',
+            'title' => 'Verificação 2FA'
+        ], 'layouts/auth');
     }
-
+    
     public function registerForm() {
 
         $this->view('auth/register',[

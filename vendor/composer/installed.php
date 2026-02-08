@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'repositorio/parque-docs',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => null,
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '74a2026aaf253d97544a7f896c064388a746a16b',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -56,9 +56,9 @@
             'dev_requirement' => false,
         ),
         'repositorio/parque-docs' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => null,
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '74a2026aaf253d97544a7f896c064388a746a16b',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

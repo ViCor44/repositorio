@@ -13,8 +13,17 @@
 
     <div class="auth-brand">
         <div class="brand-box">
-            <h1>Repositorio</h1>
-            <p>Plataforma Técnica Central</p>
+
+            <img 
+                src="<?= BASE_URL ?>/assets/img/securo-logo.png"
+                alt="Securo"
+                class="brand-logo"
+            >
+
+            <p class="brand-subtitle">
+                Plataforma Técnica Central
+            </p>
+
         </div>
 
         <div class="brand-text">

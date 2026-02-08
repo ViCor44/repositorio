@@ -243,4 +243,18 @@ table tr:hover td {
     }
 }
 
+/* ===== SIDEBAR BRAND ===== */
+
+.sidebar-brand {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 0 18px;
+}
+
+.sidebar-logo {
+    width: 160px;
+    max-width: 100%;
+    height: auto;
+}
 
