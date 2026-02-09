@@ -37,11 +37,18 @@ public function login() {
     }
 
     // 👉 Depois: estado da conta
-    if ($user['status'] !== 'ativo') {
-        return $this->view('auth/login', [
-            'error' => 'Conta ainda não aprovada por administrador',
-            'title' => 'Login'
-        ], 'layouts/auth');
+    if ($user['status'] === 'pendente') {
+        return $this->view('auth/login',[
+            'error'=>'Conta ainda não aprovada por administrador',
+            'title'=>'Login'
+        ],'layouts/auth');
+    }
+
+    if ($user['status'] === 'rejeitado') {
+        return $this->view('auth/login',[
+            'error'=>'Pedido de acesso rejeitado. Contacte o administrador.',
+            'title'=>'Login'
+        ],'layouts/auth');
     }
 
     // 👉 Password correta?

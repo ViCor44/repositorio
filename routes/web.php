@@ -58,4 +58,7 @@ $router->post('/documentos/editar', 'DocumentoController@update');
 
 $router->post('/documentos/apagar','DocumentoController@delete');
 
+$router->post('/admin/utilizadores/rejeitar', 'AdminController@rejectUser');
+
+
 

@@ -57,34 +57,41 @@ class User extends Model {
             ->fetchAll();
     }
 
-    public function approve(int $id) {
+    public function approve($id, $roleId) {
 
         $stmt = $this->db->prepare("
-            UPDATE users SET status='ativo' WHERE id=?
+            UPDATE users
+            SET status = 'ativo',
+                role_id = :role_id
+            WHERE id = :id
         ");
 
-        $stmt->execute([$id]);
+        return $stmt->execute([
+            'id' => $id,
+            'role_id' => $roleId
+        ]);
     }
 
-public function enable2fa(int $userId, string $secret): bool
-{
-    $secret = trim($secret);
+    public function enable2fa(int $userId, string $secret): bool
+    {
+        $secret = trim($secret);
 
-    // Regex ajustado: permite até 128 caracteres + padding
-    if (!preg_match('/^[A-Z2-7]{8,128}(={0,8})?$/', strtoupper($secret))) {
-        throw new \Exception("Secret 2FA inválido (não é Base32 válido). Valor recebido: " . substr($secret, 0, 50) . "... (len=" . strlen($secret) . ")");
+        // Regex ajustado: permite até 128 caracteres + padding
+        if (!preg_match('/^[A-Z2-7]{8,128}(={0,8})?$/', strtoupper($secret))) {
+            throw new \Exception("Secret 2FA inválido (não é Base32 válido). Valor recebido: " . substr($secret, 0, 50) . "... (len=" . strlen($secret) . ")");
+        }
+
+        // Grava exatamente como veio
+        $stmt = $this->db->prepare("
+            UPDATE users 
+            SET twofa_enabled = 1, twofa_secret = :secret 
+            WHERE id = :id
+        ");
+        $stmt->execute([':secret' => $secret, ':id' => $userId]);
+
+        return $stmt->rowCount() > 0;
     }
 
-    // Grava exatamente como veio
-    $stmt = $this->db->prepare("
-        UPDATE users 
-        SET twofa_enabled = 1, twofa_secret = :secret 
-        WHERE id = :id
-    ");
-    $stmt->execute([':secret' => $secret, ':id' => $userId]);
-
-    return $stmt->rowCount() > 0;
-}
     public function disable2fa(int $userId): bool
     {
         $stmt = $this->db->prepare("
@@ -104,5 +111,20 @@ public function enable2fa(int $userId, string $secret): bool
 
         return (int)$stmt->fetchColumn();
     }
+
+    public function reject(int $id) {
+
+        $stmt = $this->db->prepare("
+            UPDATE users
+            SET status = 'rejeitado'
+            WHERE id = :id
+            AND status = 'pendente'
+        ");
+
+        return $stmt->execute([
+            'id' => $id
+        ]);
+    }
+
 
 }

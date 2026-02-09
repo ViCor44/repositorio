@@ -31,6 +31,10 @@ if (!empty($_SESSION['user']) && $_SESSION['user']['role'] === 'Administrador') 
 
         <small><?= $_SESSION['user']['nome'] ?></small><br>
 
+        <span class="user-role">
+            <?= $_SESSION['user']['role'] ?>
+        </span>
+
         <hr>
 
         <?php if (!empty($_SESSION['user'])): ?>
