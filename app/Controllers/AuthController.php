@@ -20,46 +20,58 @@ class AuthController extends Controller {
         ], 'layouts/auth');
     }
 
-    public function login() {
+public function login() {
 
-        $email = $_POST['email'] ?? '';
-        $password = $_POST['password'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? '';
 
-        $userModel = new User();
-        $user = $userModel->findByEmail($email);
+    $userModel = new User();
+    $user = $userModel->findByEmail($email);
 
-        if ($user['status'] !== 'ativo') {
-            return $this->view('auth/login',[
-                'error'=>'Conta ainda não aprovada por administrador',
-                'title'=>'Login'
-            ],'layouts/auth');
-        }
-
-        if (!$user || !password_verify($password, $user['password_hash'])) {
-            return $this->view('auth/login', [
-                'error' => 'Credenciais inválidas',
-                'title' => 'Login'
-            ], 'layouts/auth');
-        }
-
-        if ($user['twofa_enabled']) {
-
-            $_SESSION['2fa_pending'] = $user['id'];
-
-            return $this->view('auth/2fa',[
-                'title'=>'Verificação 2FA'
-            ],'layouts/auth');
-        }
-
-        $_SESSION['user'] = [
-            'id' => $user['id'],
-            'nome' => $user['nome'],
-            'role' => $user['role_nome'],
-            'twofa_enabled' => (int)$user['twofa_enabled']
-        ];
-
-        $this->redirect('/documentos');
+    // 👉 Primeiro: utilizador existe?
+    if (!$user) {
+        return $this->view('auth/login', [
+            'error' => 'Credenciais inválidas',
+            'title' => 'Login'
+        ], 'layouts/auth');
     }
+
+    // 👉 Depois: estado da conta
+    if ($user['status'] !== 'ativo') {
+        return $this->view('auth/login', [
+            'error' => 'Conta ainda não aprovada por administrador',
+            'title' => 'Login'
+        ], 'layouts/auth');
+    }
+
+    // 👉 Password correta?
+    if (!password_verify($password, $user['password_hash'])) {
+        return $this->view('auth/login', [
+            'error' => 'Credenciais inválidas',
+            'title' => 'Login'
+        ], 'layouts/auth');
+    }
+
+    // 👉 2FA
+    if ($user['twofa_enabled']) {
+
+        $_SESSION['2fa_pending'] = $user['id'];
+
+        return $this->view('auth/2fa', [
+            'title' => 'Verificação 2FA'
+        ], 'layouts/auth');
+    }
+
+    // 👉 Login OK
+    $_SESSION['user'] = [
+        'id' => $user['id'],
+        'nome' => $user['nome'],
+        'role' => $user['role_nome'],
+        'twofa_enabled' => (int)$user['twofa_enabled']
+    ];
+
+    $this->redirect('/documentos');
+}
 
     public function logout() {
         session_destroy();
@@ -107,12 +119,18 @@ class AuthController extends Controller {
 
     public function register() {
 
-        $userModel = new \App\Models\User();
+        $userModel = new User();
 
-        // validações básicas
-        if (empty($_POST['email']) || empty($_POST['nome'])) {
+        if (empty($_POST['email']) || empty($_POST['nome']) || empty($_POST['password'])) {
             return $this->view('auth/register',[
                 'error'=>'Preenche todos os campos',
+                'title'=>'Pedido de Acesso'
+            ],'layouts/auth');
+        }
+
+        if ($_POST['password'] !== $_POST['password_confirm']) {
+            return $this->view('auth/register',[
+                'error'=>'As passwords não coincidem',
                 'title'=>'Pedido de Acesso'
             ],'layouts/auth');
         }
@@ -130,17 +148,9 @@ class AuthController extends Controller {
             'password'=>$_POST['password']
         ]);
 
-        if ($_POST['password'] !== $_POST['password_confirm']) {
-            return $this->view('auth/register',[
-                'error'=>'As passwords não coincidem',
-                'title'=>'Pedido de Acesso'
-            ],'layouts/auth');
-        }
+        $_SESSION['flash_success'] = 'Pedido enviado com sucesso! Aguarda aprovação de um administrador.';
 
-        return $this->view('auth/register',[
-            'success'=>'Pedido enviado. Aguarda aprovação.',
-            'title'=>'Pedido de Acesso'
-        ],'layouts/auth');
+        $this->redirect('/login');
     }
 
 }

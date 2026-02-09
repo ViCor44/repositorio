@@ -43,7 +43,7 @@ $router->get('/registo','AuthController@registerForm');
 $router->post('/registo','AuthController@register');
 
 $router->get('/register', 'AuthController@register');
-$router->post('/register', 'AuthController@store');
+$router->post('/register', 'AuthController@register');
 
 
 $router->get('/perfil/seguranca','PerfilController@seguranca');

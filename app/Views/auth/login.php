@@ -4,6 +4,13 @@
 Aceda ao sistema de documentação técnica.
 </p>
 
+<?php if (!empty($_SESSION['flash_success'])): ?>
+    <div class="auth-card auth-card-error">
+        <?= $_SESSION['flash_success']; ?>
+    </div>
+    <?php unset($_SESSION['flash_success']); ?>
+<?php endif; ?>
+
 <form method="POST">
 
 <label>Email</label>

@@ -1,18 +1,18 @@
 <h2>Pedido de Acesso</h2>
 
-<form method="POST">
+<form method="POST" action="<?= BASE_URL ?>/register">
 
 <label>Nome</label>
 <input name="nome" required>
 
 <label>Email</label>
-<input type="email" required>
+<input type="email" name="email" required>
 
 <label>Password</label>
-<input type="password" required>
+<input type="password" name="password" required>
 
 <label>Confirmar Password</label>
-<input type="password" required>
+<input type="password" name="password_confirm" required>
 
 <button>Enviar pedido</button>
 

@@ -258,3 +258,20 @@ table tr:hover td {
     height: auto;
 }
 
+
+.auth-card {
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+/* versão vermelha */
+.auth-card-error {
+    background: #ffe5e5;
+    border: 1px solid #ffb3b3;
+    color: #b30000;
+}
+
