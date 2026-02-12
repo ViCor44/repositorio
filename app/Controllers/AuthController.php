@@ -4,6 +4,7 @@ namespace App\Controllers;
 use Core\Controller;
 use App\Models\User;
 use Core\Auth;
+use Core\AuthLogger;
 
 class AuthController extends Controller {
 
@@ -29,7 +30,11 @@ public function login() {
     $user = $userModel->findByEmail($email);
 
     // 👉 Primeiro: utilizador existe?
-    if (!$user) {
+        if (!$user) {
+            AuthLogger::log('FAIL', [
+            'email' => $email,
+            'reason' => 'not_found'
+        ]);
         return $this->view('auth/login', [
             'error' => 'Credenciais inválidas',
             'title' => 'Login'
@@ -38,6 +43,10 @@ public function login() {
 
     // 👉 Depois: estado da conta
     if ($user['status'] === 'pendente') {
+        AuthLogger::log('BLOCKED', [
+            'email' => $email,
+            'status' => 'pendente'
+        ]);
         return $this->view('auth/login',[
             'error'=>'Conta ainda não aprovada por administrador',
             'title'=>'Login'
@@ -45,6 +54,10 @@ public function login() {
     }
 
     if ($user['status'] === 'rejeitado') {
+        AuthLogger::log('BLOCKED', [
+            'email' => $email,
+            'status' => 'rejeitado'
+        ]);
         return $this->view('auth/login',[
             'error'=>'Pedido de acesso rejeitado. Contacte o administrador.',
             'title'=>'Login'
@@ -53,6 +66,11 @@ public function login() {
 
     // 👉 Password correta?
     if (!password_verify($password, $user['password_hash'])) {
+        AuthLogger::log('FAIL', [
+            'email' => $email,
+            'user_id' => $user['id'],
+            'reason' => 'wrong_password'
+        ]);
         return $this->view('auth/login', [
             'error' => 'Credenciais inválidas',
             'title' => 'Login'
@@ -76,7 +94,10 @@ public function login() {
         'role' => $user['role_nome'],
         'twofa_enabled' => (int)$user['twofa_enabled']
     ];
-
+    AuthLogger::log('SUCCESS', [
+        'email' => $email,
+        'user_id' => $user['id']
+    ]);
     $this->redirect('/documentos');
 }
 
