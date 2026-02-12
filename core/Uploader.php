@@ -7,7 +7,12 @@ class Uploader {
     protected string $basePath;
 
     public function __construct(string $basePath) {
+
         $this->basePath = dirname(__DIR__) . $basePath;
+
+        if (!is_dir($this->basePath)) {
+            mkdir($this->basePath, 0755, true);
+        }
     }
 
     public function upload(array $file): array {

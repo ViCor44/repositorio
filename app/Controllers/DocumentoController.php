@@ -77,7 +77,6 @@ class DocumentoController extends Controller {
             $documentoModel = new Documento();
 
             $documentoId = $documentoModel->create([
-                'parque_id' => $_POST['parque_id'],
                 'zona_id' => $_POST['zona_id'] ?: null,
                 'edificio_id' => $_POST['edificio_id'] ?: null,
                 'sala_id' => $_POST['sala_id'] ?: null,

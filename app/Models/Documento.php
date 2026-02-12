@@ -79,17 +79,26 @@ class Documento extends Model {
     public function findWithActiveVersion($id) {
 
         $stmt = $this->db->prepare("
-            SELECT d.*, dv.*
+            SELECT 
+                d.*,
+                dv.id AS versao_id,
+                dv.versao,
+                dv.ficheiro_path,
+                dv.formato,
+                dv.tamanho,
+                dv.is_ativo
             FROM documentos d
             JOIN documento_versoes dv
-            ON dv.documento_id = d.id
-            AND dv.is_ativo = 1
+                ON dv.documento_id = d.id
+                AND dv.is_ativo = 1
             WHERE d.id = ?
         ");
+
 
         $stmt->execute([$id]);
 
         return $stmt->fetch();
+        
     }
 
     public function versions($id) {
