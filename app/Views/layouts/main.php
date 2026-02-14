@@ -40,9 +40,14 @@ if (!empty($_SESSION['user']) && $_SESSION['user']['role'] === 'Administrador') 
         <?php if (!empty($_SESSION['user'])): ?>
             <a href="<?= BASE_URL ?>/documentos">📂 Documentos</a>
         <?php endif; ?>
-        <?php if ($_SESSION['user']['role'] === 'Administrador'): ?>
+        <?php if (
+            $_SESSION['user']['role'] === 'Administrador' ||
+            $_SESSION['user']['role'] === 'Engenheiro'
+        ): ?>
 
-        <a href="<?= BASE_URL ?>/admin/localizacao">📍 Gestão de Localizações</a>
+            <a href="<?= BASE_URL ?>/admin/localizacao">
+                📍 Gestão de Localizações
+            </a>
 
         <?php endif; ?>
 

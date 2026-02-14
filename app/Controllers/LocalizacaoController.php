@@ -8,7 +8,7 @@ class LocalizacaoController extends Controller {
 
     public function index() {
 
-        Auth::requireRole(['Administrador']);
+        Auth::requireRole(['Administrador', 'Engenheiro']);
 
         $zonaModel = new \App\Models\Zona();
         $edModel   = new \App\Models\Edificio();
@@ -33,7 +33,7 @@ class LocalizacaoController extends Controller {
 
     public function createZona() {
 
-        \Core\Auth::requireRole(['Administrador']);
+        \Core\Auth::requireRole(['Administrador', 'Engenheiro']);
 
         (new \App\Models\Zona())
             ->create($_POST['nome']);
@@ -43,7 +43,7 @@ class LocalizacaoController extends Controller {
 
     public function createEdificio() {
 
-        \Core\Auth::requireRole(['Administrador']);
+        \Core\Auth::requireRole(['Administrador', 'Engenheiro']);
 
         (new \App\Models\Edificio())
             ->create($_POST['zona_id'],$_POST['nome']);
@@ -53,7 +53,7 @@ class LocalizacaoController extends Controller {
 
     public function createSala() {
 
-        \Core\Auth::requireRole(['Administrador']);
+        \Core\Auth::requireRole(['Administrador', 'Engenheiro']);
 
         (new \App\Models\Sala())
             ->create($_POST['edificio_id'],$_POST['nome']);
@@ -63,7 +63,7 @@ class LocalizacaoController extends Controller {
 
     public function updateZona() {
 
-        Auth::requireRole(['Administrador']);
+        Auth::requireRole(['Administrador', 'Engenheiro']);
 
         (new \App\Models\Zona())
             ->update($_POST['id'],$_POST['nome']);
@@ -73,7 +73,7 @@ class LocalizacaoController extends Controller {
 
     public function deleteZona() {
 
-        Auth::requireRole(['Administrador']);
+        Auth::requireRole(['Administrador', 'Engenheiro']);
 
         if (!(new \App\Models\Zona())->delete($_POST['id'])) {
             $_SESSION['flash_error'] = 'Zona tem edifícios associados.';
@@ -84,7 +84,7 @@ class LocalizacaoController extends Controller {
 
     public function updateEdificio() {
 
-        Auth::requireRole(['Administrador']);
+        Auth::requireRole(['Administrador', 'Engenheiro']);
 
         (new \App\Models\Edificio())
             ->update($_POST['id'],$_POST['nome']);
@@ -94,7 +94,7 @@ class LocalizacaoController extends Controller {
 
     public function deleteEdificio() {
 
-        Auth::requireRole(['Administrador']);
+        Auth::requireRole(['Administrador', 'Engenheiro']);
 
         if (!(new \App\Models\Edificio())->delete($_POST['id'])) {
             $_SESSION['flash_error'] = 'Edifício tem salas associadas.';
@@ -105,7 +105,7 @@ class LocalizacaoController extends Controller {
     
     public function updateSala() {
 
-        Auth::requireRole(['Administrador']);
+        Auth::requireRole(['Administrador', 'Engenheiro']);
 
         (new \App\Models\Sala())
             ->update($_POST['id'],$_POST['nome']);
@@ -115,7 +115,7 @@ class LocalizacaoController extends Controller {
 
     public function deleteSala() {
 
-        Auth::requireRole(['Administrador']);
+        Auth::requireRole(['Administrador', 'Engenheiro']);
 
         (new \App\Models\Sala())
             ->delete($_POST['id']);
