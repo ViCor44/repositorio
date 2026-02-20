@@ -118,22 +118,46 @@ class Documento extends Model {
 
     public function search(array $filters) {
 
+        $userId = $_SESSION['user']['id'];
+
         $sql = "
-            SELECT d.*,
+            SELECT 
+                d.*,
                 s.nome AS sala,
                 e.nome AS edificio,
                 z.nome AS zona,
-                v.versao AS versao
-            FROM documentos d
-            JOIN salas s ON s.id=d.sala_id
-            JOIN edificios e ON e.id=s.edificio_id
-            JOIN zonas z ON z.id=e.zona_id
-            LEFT JOIN documento_versoes v 
-                ON v.documento_id = d.id AND v.is_ativo = 1
-            WHERE 1=1
-            ";
+                v.versao AS versao,
+                COUNT(c.id) AS novos_comentarios
 
-        $params = [];
+            FROM documentos d
+
+            JOIN salas s ON s.id = d.sala_id
+            JOIN edificios e ON e.id = s.edificio_id
+            JOIN zonas z ON z.id = e.zona_id
+
+            LEFT JOIN documento_versoes v 
+                ON v.documento_id = d.id 
+                AND v.is_ativo = 1
+
+            LEFT JOIN documento_views dv
+                ON dv.documento_id = d.id
+                AND dv.user_id = :user_id
+
+            LEFT JOIN comentarios c
+                ON c.documento_id = d.id
+                AND (
+                    dv.last_view_at IS NULL
+                    OR c.created_at > dv.last_view_at
+                )
+
+            WHERE 1=1
+        ";
+
+        $params = [
+            'user_id' => $userId
+        ];
+
+        // --- FILTROS EXISTENTES ---
 
         if (!empty($filters['zona_id'])) {
             $sql .= " AND z.id = :zona";
@@ -172,44 +196,15 @@ class Documento extends Model {
             $params['tag'] = $filters['tag'];
         }
 
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($params);
-
-        return $stmt->fetchAll();
-    }
-
-    public function filterByLocal($zona,$edificio,$sala) {
-
-        $sql = "
-        SELECT d.*
-        FROM documentos d
-        LEFT JOIN salas s ON s.id = d.sala_id
-        LEFT JOIN edificios e ON e.id = s.edificio_id
-        LEFT JOIN zonas z ON z.id = e.zona_id
-        WHERE 1=1
+        $sql .= "
+            GROUP BY d.id
+            ORDER BY d.criado_em DESC
         ";
 
-        $params = [];
-
-        if ($zona) {
-            $sql .= " AND z.id = ?";
-            $params[] = $zona;
-        }
-
-        if ($edificio) {
-            $sql .= " AND e.id = ?";
-            $params[] = $edificio;
-        }
-
-        if ($sala) {
-            $sql .= " AND s.id = ?";
-            $params[] = $sala;
-        }
-
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 

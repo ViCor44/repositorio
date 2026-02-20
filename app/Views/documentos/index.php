@@ -104,8 +104,17 @@ Ativar 2FA agora
 <?php endif; ?>
 
 <?php foreach ($documentos as $doc): ?>
-<tr>
-    <td><?= htmlspecialchars($doc['titulo']) ?></td>
+<tr class="<?= $doc['novos_comentarios'] > 0 ? 'row-highlight' : '' ?>">
+    
+    <td>
+        <?= htmlspecialchars($doc['titulo']) ?>
+
+        <?php if ($doc['novos_comentarios'] > 0): ?>
+            <span class="badge badge-danger">
+                🔔 <?= $doc['novos_comentarios'] ?>
+            </span>
+        <?php endif; ?>
+    </td>    
     <td>
     <span class="badge tipo-<?= $doc['tipo'] ?>">
         <?= strtoupper($doc['tipo']) ?>

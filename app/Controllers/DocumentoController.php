@@ -156,6 +156,26 @@ class DocumentoController extends Controller {
         $model = new \App\Models\Documento();
         $doc = $model->findWithActiveVersion($id);
 
+        $doc = $model->findWithActiveVersion($id);
+
+        if (!$doc) die("Documento não encontrado");
+
+        /**
+         * 🔔 MARCAR DOCUMENTO COMO VISTO
+         */
+        $db = \Core\Database::getInstance();
+
+        $stmt = $db->prepare("
+            INSERT INTO documento_views (user_id, documento_id, last_view_at)
+            VALUES (?, ?, NOW())
+            ON DUPLICATE KEY UPDATE last_view_at = NOW()
+        ");
+
+        $stmt->execute([
+            $_SESSION['user']['id'],
+            $id
+        ]);
+
         $versoes = $model->versions($id);
         $comentarios = (new \App\Models\Comentario())->byDocumento($id);
         $tags = (new \App\Models\Tag())->byDocumento($id);

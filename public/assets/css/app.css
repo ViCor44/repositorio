@@ -310,3 +310,7 @@ table tr:hover td {
 .btn-danger:hover {
     background:#dc2626;
 }
+
+.row-highlight {
+    background: linear-gradient(90deg, #fff3cd 0%, #ffffff 60%);
+}

@@ -89,7 +89,7 @@ if ($ext === 'pdf'):
 <?php foreach ($comentarios as $c): ?>
 <p>
     <strong><?= htmlspecialchars($c['nome']) ?></strong>
-    (<?= $c['criado_em'] ?>)<br>
+    (<?= $c['created_at'] ?>)<br>
     <?= nl2br(htmlspecialchars($c['texto'])) ?>
 </p>
 <hr>
