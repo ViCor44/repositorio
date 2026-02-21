@@ -2,6 +2,8 @@
 
 $pendingCount = 0;
 
+$user = $_SESSION['user'] ?? null;
+
 if (!empty($_SESSION['user']) && $_SESSION['user']['role'] === 'Administrador') {
 
     $pendingCount = (new \App\Models\User())->countPending();
@@ -29,20 +31,25 @@ if (!empty($_SESSION['user']) && $_SESSION['user']['role'] === 'Administrador') 
 
         <hr>
 
-        <small><?= $_SESSION['user']['nome'] ?></small><br>
+        <?php if ($user): ?>
+            <small><?= htmlspecialchars($user['nome']) ?></small><br>
 
-        <span class="user-role">
-            <?= $_SESSION['user']['role'] ?>
-        </span>
+            <span class="user-role">
+                <?= htmlspecialchars($user['role']) ?>
+            </span>
 
-        <hr>
+            <hr>
+        <?php endif; ?>
 
         <?php if (!empty($_SESSION['user'])): ?>
             <a href="<?= BASE_URL ?>/documentos">📂 Documentos</a>
         <?php endif; ?>
         <?php if (
-            $_SESSION['user']['role'] === 'Administrador' ||
-            $_SESSION['user']['role'] === 'Engenheiro'
+            $user &&
+            (
+                $user['role'] === 'Administrador' ||
+                $user['role'] === 'Engenheiro'
+            )
         ): ?>
 
             <a href="<?= BASE_URL ?>/admin/localizacao">
@@ -55,7 +62,7 @@ if (!empty($_SESSION['user']) && $_SESSION['user']['role'] === 'Administrador') 
 
         <?php if (!empty($_SESSION['user'])): ?>            
 
-            <?php if (!$_SESSION['user']['twofa_enabled']): ?>
+            <?php if ($user && empty($user['twofa_enabled'])): ?>
 
             <div style="margin-top:15px;padding:10px;background:#1f2933;border-radius:8px">
             <small>🔐 Proteja a conta</small><br>

@@ -6,17 +6,27 @@ use PDO;
 
 class User extends Model {
 
-    public function findByEmail(string $email) {
-        $stmt = $this->db->prepare(
-            "SELECT u.*, r.nome AS role_nome
-             FROM users u
-             JOIN roles r ON r.id = u.role_id
-             WHERE email = :email
-             AND ativo = 1"
-        );
+    public function findByEmail($email) {
 
-        $stmt->execute(['email' => $email]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt = $this->db->prepare("
+            SELECT u.*, r.nome AS role_nome
+            FROM users u
+            LEFT JOIN roles r ON r.id = u.role_id
+            WHERE u.email = ?
+            LIMIT 1
+        ");
+
+        $stmt->execute([$email]);
+
+        return $stmt->fetch();
+    }
+    public function updatePassword($id, $hash) {
+
+        $stmt = $this->db->prepare("
+            UPDATE users SET password_hash = ? WHERE id = ?
+        ");
+
+        $stmt->execute([$hash, $id]);
     }
 
     public function findById(int $id) {

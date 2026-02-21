@@ -27,7 +27,7 @@ Aceda ao sistema de documentação técnica.
         <a href="<?= BASE_URL ?>/register">Pedir acesso</a>
     </p>
 
-    <a href="<?= BASE_URL ?>/password/reset">Recuperar password</a>
+    <a href="<?= BASE_URL ?>/password/forgot">Recuperar password</a>
 </div>
 
 <?php if(!empty($error)): ?>

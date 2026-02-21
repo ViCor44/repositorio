@@ -60,5 +60,9 @@ $router->post('/documentos/apagar','DocumentoController@delete');
 
 $router->post('/admin/utilizadores/rejeitar', 'AdminController@rejectUser');
 
+$router->get('/password/forgot', 'PasswordController@forgot');
+$router->post('/password/send', 'PasswordController@send');
+$router->get('/password/reset', 'PasswordController@reset');
+$router->post('/password/update', 'PasswordController@update');
 
 

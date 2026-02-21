@@ -17,7 +17,8 @@
     "minimum-stability": "stable",
     "require": {
         "spomky-labs/otphp": "^11.4",
-        "endroid/qr-code": "^6.0"
+        "endroid/qr-code": "^6.0",
+        "phpmailer/phpmailer": "^7.0"
     }
 
 }
